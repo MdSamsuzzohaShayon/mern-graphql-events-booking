@@ -4,6 +4,7 @@ const { buildSchema } = require('graphql');
 
 
 const app = express();
+const events = [];
 
 
 
@@ -20,14 +21,38 @@ app.use('/graphql', graphqlHttp({
     // MIDDLEWARE FUNCTION 
     // CONFIGURE GRAPHQL API
 
+
+
+
+    // Scalar types# A GraphQL object type has a name and fields, but at some point those fields have to resolve to some concrete data
+    // https://graphql.org/learn/schema/#scalar-types
+
+
     // https://graphql.org/graphql-js/utilities/#buildschema
     // FOR FETCH DATA WE NEED QUERY AND FOR CHANGE DATA WE NEED MUTATION 
     schema: buildSchema(`
-    type RootQuery{
-        events: [String!]!
+
+    type Event{
+        _id: ID!
+        title: String!
+        description: String!
+        price: Float!
+        date: String!
     }
+    input EventInput{
+        title: String!
+        description: String!
+        price: Float!
+        date: String!
+    }
+
+
+    type RootQuery{
+        events: [Event!]!
+    }
+
     type RootMutation{
-        createEvent(name: String): String
+        createEvent(eventInput: EventInput): Event
     }
 
     schema{
@@ -36,13 +61,27 @@ app.use('/graphql', graphqlHttp({
     }
     
     `),
+
+
+
+
+
     rootValue: {
         events: (args) => {
-            return ['Romantic', 'Cooking', "selling", "Coding"]
+            return events;
         },
         createEvent: (args)=>{
-            const eventName = args.name;
-            return eventName;
+            const event = {
+                _id: Math.random().toString(),
+                title: args.eventInput.title,
+                description: args.eventInput.description,
+                price: +args.eventInput.price,
+                date: args.eventInput.date
+            }
+            console.log("Args: ", args);
+            console.log("event object: ", event);
+            events.push(event);
+            return event;
         }
     },
     graphiql: true

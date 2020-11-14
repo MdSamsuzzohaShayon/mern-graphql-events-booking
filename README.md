@@ -22,5 +22,20 @@
 
  ![Graph QL](screenshots/graphql_8.png)
 
+ - Query for particular data
+
+ ![Graph QL](screenshots/graphql_9.png)
+
+ - Add an event and return that event (mutation)
+
+ ![Graph QL](screenshots/graphql_11.png)
+
+ - Query recent created event
+
+ ![Graph QL](screenshots/graphql_12.png)
+
+
+
+
 
 
