@@ -2,9 +2,11 @@ const express = require('express');
 const graphqlHttp = require('express-graphql').graphqlHTTP;
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 
 const Event = require('./models/Event');
+const User = require('./models/User');
 
 
 const app = express();
@@ -43,11 +45,24 @@ app.use('/graphql', graphqlHttp({
         price: Float!
         date: String!
     }
+
+
+    type User {
+        _id: ID!
+        email: String!
+        password: String
+    }
+
     input EventInput{
         title: String!
         description: String!
         price: Float!
         date: String!
+    }
+
+    input UserInput{
+        email: String!
+        password: String!
     }
 
 
@@ -57,6 +72,7 @@ app.use('/graphql', graphqlHttp({
 
     type RootMutation{
         createEvent(eventInput: EventInput): Event
+        createUser(userInput: UserInput): User
     }
 
     schema{
@@ -75,12 +91,12 @@ app.use('/graphql', graphqlHttp({
             // return events;
             return Event.find()
                 .then(events => {
-                    return events.map(event=>{
-                        return {...event._doc, _id: event.id.toString() }
-                        
+                    return events.map(event => {
+                        return { ...event._doc, _id: event.id.toString() }
+
                     })
                 })
-                .catch(err=> console.log(err));
+                .catch(err => console.log(err));
         },
         createEvent: (args) => {
             /*
@@ -101,18 +117,57 @@ app.use('/graphql', graphqlHttp({
                 title: args.eventInput.title,
                 description: args.eventInput.description,
                 price: +args.eventInput.price,
-                date: new Date(args.eventInput.date)
+                date: new Date(args.eventInput.date),
+                creator: '5fb0e6af46db8e55445ebdbe'
             });
+            let createEvent;
 
             return event.save()
                 .then(result => {
-                    console.log(result);
-                    return { ...result._doc, _id:  result._doc._id.toString() };
+                    createEvent = { ...result._doc, _id: result._doc._id.toString() };
+                    return User.findById("5fb0eb0fd131515b6015e398");
+                    // console.log(result);
+                })
+                .then(user => {
+                    if (!user) {
+                        // IT THERE IS ANY ERROR IT WILL SKIP ALL THEN BLOCK AND GO FOR CATCH BLOCK
+                        throw new Error("User not found");
+                    }
+                    // PUSH IS OBJECT OF MONGOOSE 
+                    user.createdEvents.push(event);
+                    // UPDATE EXISTING USER 
+                    return user.save();
+                })
+                .then(result=>{
+                    return createEvent;
                 })
                 .catch(err => {
                     console.log(err);
                     throw err;
                 });
+        },
+
+        createUser: args => {
+            return User.findOne({ email: args.userInput.email }).then(user => {
+                // CHECK FOR IT THERE IS ALREADY A USER OR NOT 
+                if (user) {
+                    // IT THERE IS ANY ERROR IT WILL SKIP ALL THEN BLOCK AND GO FOR CATCH BLOCK
+                    throw new Error("User exist alreaddy");
+                }
+                return bcrypt.hash(args.userInput.password, 12);
+            })
+                .then(hashedPassword => {
+                    const user = new User({
+                        email: args.userInput.email,
+                        password: hashedPassword
+                    });
+                    return user.save();
+                })
+                .then(result => {
+                    return { ...result._doc, password: null, _id: result.id }
+                })
+                .catch(err => { throw err; });
+
         }
     },
     graphiql: true

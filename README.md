@@ -56,6 +56,28 @@
 }
  ```
 
+ - Mutation for creating user
+
+ ```
+ mutation{
+  createUser(userInput:{email:"mbappe@test.com", password:"1234"}){
+    email
+    password
+  }
+}
+ ```
+
+ - Mutation  for user - creating events with relation of user
+
+ ```
+ mutation{
+  createEvent(eventInput: {title: "testing created event", description:"this is a test", price: 255, date:"2020-11-15T08:38:47.198Z" }){
+    title
+    description
+  }
+}
+ ```
+
 
 
 
