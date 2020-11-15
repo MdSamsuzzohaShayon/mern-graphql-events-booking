@@ -4,22 +4,22 @@ const bcrypt = require('bcryptjs');
 const Event = require("../../models/Event");
 const User = require('../../models/User');
 
-const events = eventsIds => {
-    // $in UNDERSTOOD BY MONGODB 
-    return Event.find({ _id: { $in: eventsIds } })
-        .then(events => {
-            return events.map(event => {
-                return {
-                    ...event._doc,
-                    _id: event.id,
-                    creator: user.bind(this, event.creator)
-                }
-            })
-        })
-        .catch(err => {
-            throw err;
+const events = async eventsIds => {
+    try {
+        // $in UNDERSTOOD BY MONGODB 
+        const events = await Event.find({ _id: { $in: eventsIds } })
+        events.map(event => {
+            return {
+                ...event._doc,
+                _id: event.id,
+                creator: user.bind(this, event.creator)
+            };
         });
-    ;
+        return events;
+    } catch (err) {
+        throw err;
+
+    }
 }
 
 const user = userId => {
