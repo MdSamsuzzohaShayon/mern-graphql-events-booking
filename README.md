@@ -78,6 +78,55 @@
 }
  ```
 
+ - Query data with relation - get data of events and also get all info about creator of events
+
+ ```
+ query{
+  events{
+    creator{
+      _id
+      email
+      password
+    }
+    _id
+    title
+    description
+    price
+    date
+    __typename
+  }
+}
+ ```
+
+
+ - More flexible way to query data
+
+ ```
+ {
+  events {
+    creator {
+      _id
+      email
+      password
+      createdEvents {
+        _id
+        title
+        description
+        price
+        date
+        __typename
+      }
+    }
+    _id
+    title
+    description
+    price
+    date
+    __typename
+  }
+}
+ ```
+
 
 
 
