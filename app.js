@@ -1,6 +1,10 @@
 const express = require('express');
 const graphqlHttp = require('express-graphql').graphqlHTTP;
 const { buildSchema } = require('graphql');
+const mongoose = require('mongoose');
+
+
+const Event = require('./models/Event');
 
 
 const app = express();
@@ -68,9 +72,18 @@ app.use('/graphql', graphqlHttp({
 
     rootValue: {
         events: (args) => {
-            return events;
+            // return events;
+            return Event.find()
+                .then(events => {
+                    return events.map(event=>{
+                        return {...event._doc, _id: event.id.toString() }
+                        
+                    })
+                })
+                .catch(err=> console.log(err));
         },
-        createEvent: (args)=>{
+        createEvent: (args) => {
+            /*
             const event = {
                 _id: Math.random().toString(),
                 title: args.eventInput.title,
@@ -81,7 +94,25 @@ app.use('/graphql', graphqlHttp({
             console.log("Args: ", args);
             console.log("event object: ", event);
             events.push(event);
-            return event;
+            // return event;
+            */
+
+            const event = new Event({
+                title: args.eventInput.title,
+                description: args.eventInput.description,
+                price: +args.eventInput.price,
+                date: new Date(args.eventInput.date)
+            });
+
+            return event.save()
+                .then(result => {
+                    console.log(result);
+                    return { ...result._doc, _id:  result._doc._id.toString() };
+                })
+                .catch(err => {
+                    console.log(err);
+                    throw err;
+                });
         }
     },
     graphiql: true
@@ -94,4 +125,11 @@ app.use('/graphql', graphqlHttp({
 
 
 const port = process.env.PORT || 3000;
+
+mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.MONGO_DB}`, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("Mongo db is connected");
+    })
+    .catch(err => console.log(err))
+
 app.listen(port, () => console.log('Server is running on : ' + port));

@@ -1,0 +1,7 @@
+{
+    "env": {
+        "MONGO_USER": "GET_USER_NAME_FROM_MONGODB_ATLAS",
+        "MONGO_PASSWORD": "GET_PASSWORD_FROM_MONGODB_ATLAS",
+        "MONGO_DB": "mern-graphql-events"
+    }
+}

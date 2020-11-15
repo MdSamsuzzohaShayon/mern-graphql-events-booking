@@ -34,6 +34,28 @@
 
  ![Graph QL](screenshots/graphql_12.png)
 
+ - Creating first event and save to database
+
+ ```
+ mutation {
+  createEvent(eventInput: {title: "graph ql post one", description: "this is post description", price: 9.99, date: "2020-11-14T17:44:26.334Z"}) {
+    title
+    description
+  }
+}
+ ```
+
+ - Query data from database
+
+ ```
+ query{
+  events{
+    title
+    _id
+  }
+}
+ ```
+
 
 
 
