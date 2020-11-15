@@ -10,7 +10,13 @@ const User = require('./models/User');
 
 
 const app = express();
-const events = [];
+// const events = [];
+
+
+// THERE IS NOT CREATOR OR USER WITH THIS ID OF EVENT 
+// Event.find().populate().then(result => console.log(result));
+
+
 
 
 
@@ -44,6 +50,7 @@ app.use('/graphql', graphqlHttp({
         description: String!
         price: Float!
         date: String!
+        creator: User!
     }
 
 
@@ -51,6 +58,7 @@ app.use('/graphql', graphqlHttp({
         _id: ID!
         email: String!
         password: String
+        createdEvents: [Event!]
     }
 
     input EventInput{
@@ -86,13 +94,24 @@ app.use('/graphql', graphqlHttp({
 
 
 
+
+    // RESOLVER 
     rootValue: {
-        events: (args) => {
+        events: () => {
             // return events;
             return Event.find()
+                .populate('creator')
                 .then(events => {
+                    // console.log("Events: ", events);
                     return events.map(event => {
-                        return { ...event._doc, _id: event.id.toString() }
+                        return {
+                            ...event._doc,
+                            _id: event.id,
+                            creator: {
+                                ...event._doc.creator._doc,
+                                _id: event._doc.creator.id
+                            }
+                        }
 
                     })
                 })
@@ -118,7 +137,7 @@ app.use('/graphql', graphqlHttp({
                 description: args.eventInput.description,
                 price: +args.eventInput.price,
                 date: new Date(args.eventInput.date),
-                creator: '5fb0e6af46db8e55445ebdbe'
+                creator: "5fb0eb0fd131515b6015e398"
             });
             let createEvent;
 
@@ -138,7 +157,7 @@ app.use('/graphql', graphqlHttp({
                     // UPDATE EXISTING USER 
                     return user.save();
                 })
-                .then(result=>{
+                .then(result => {
                     return createEvent;
                 })
                 .catch(err => {
