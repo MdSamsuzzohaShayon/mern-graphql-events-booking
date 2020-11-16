@@ -179,6 +179,43 @@ query{
 
 
 
+ - query for user login
+
+ ```
+ query{
+  login(email: "coman@est.com", password:"1234"){
+    userId
+    token
+    tokenExpiration
+  }
+}
+ ```
+
+ - Use postman for using authorize login post request 
+
+ ![Graph QL](screenshots/graphql_13.png)
+
+ ```
+ {
+    "query": "query {login(email:\"coman@est.com\", password: \"1234\"){token}}"
+}
+ ```
+
+ - Using postman for mutation - making header - we can't set header in graphiql 
+
+ ![Graph QL](screenshots/graphql_15.png)
+
+ ![Graph QL](screenshots/graphql_14.png)
+
+
+ ```
+ {
+    "query": "mutation{createEvent(eventInput: {title: \"Using postman for mutation\", description: \"This is description using postman\", price: 134, date: \"2020-11-16T13:28:35.235Z\"}){_id title}}"
+}
+ ```
+
+
+
 
 
 

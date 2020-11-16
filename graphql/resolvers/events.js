@@ -1,5 +1,7 @@
 const Event = require("../../models/Event");
+const User = require('../../models/User');
 const { transformEvent} = require('./merge');
+const { dateToString } = require('../../helper/date');
 
 
 
@@ -64,7 +66,7 @@ module.exports = {
             description: args.eventInput.description,
             price: +args.eventInput.price,
             date: dateToString(args.eventInput.date),
-            creator: "5fb159c9f80f5535bb8293cc"
+            creator: req.userId
         });
         // DECLARE A UNINITILIZED VARIABLE SO LATTER ON WE CAN USE IT
         let createEvent;
@@ -74,7 +76,7 @@ module.exports = {
             // SAVING A NEW EVENT AND REFERNAL USER SAVING 
             const result = await event.save();
             createEvent = transformEvent(result);
-            const creator = await User.findById("5fb159c9f80f5535bb8293cc");  // RETURNING USER FROM HERE - UP NEXT IN THEN PROMISE IT CHECK IF USER IS EXIST OR NOT
+            const creator = await User.findById(req.userId);  // RETURNING USER FROM HERE - UP NEXT IN THEN PROMISE IT CHECK IF USER IS EXIST OR NOT
             // console.log(result);
 
             // SEARCHING USER FROM DATABASE AND CHECKING THE USER IS NOT EXIST IT WILLRETURN AN ERROR
