@@ -3,7 +3,18 @@ const bcrypt = require('bcryptjs');
 
 const Event = require("../../models/Event");
 const User = require('../../models/User');
+const Booking = require('../../models/Booking');
 
+
+
+
+
+
+
+
+
+
+// EXTRA FUNCTION FOR HELPING 
 const events = async eventsIds => {
     try {
         // $in UNDERSTOOD BY MONGODB 
@@ -22,6 +33,7 @@ const events = async eventsIds => {
     }
 }
 
+// EXTRA FUNCTION FOR HELPING 
 const user = async userId => {
     try {
         const user = await User.findById(userId)
@@ -37,7 +49,26 @@ const user = async userId => {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
+
+
     // QUERY FOR GETTING EVENTS 
     events: async () => {
         try {
@@ -57,6 +88,36 @@ module.exports = {
 
         }
     },
+
+
+
+
+
+
+
+
+    // BOOKING MUTATIONS
+    bookings: async () => {
+        try {
+            const bookings = await Booking.find();
+            return bookings.map(booking => {
+                return {
+                    ...booking._doc,
+                    _id: booking.id,
+                    createdAt: new Date(booking._doc.createdAt).toISOString(),
+                    updatedAt: new Date(booking._doc.updatedAt).toISOString()
+                }
+            })
+        } catch (err) {
+            throw err;
+        }
+    },
+
+
+
+
+
+
 
 
 
@@ -123,6 +184,15 @@ module.exports = {
 
 
 
+
+
+
+
+
+
+
+
+
     // MUTATION FOR CREATING USER 
     createUser: async args => {
         try {
@@ -144,6 +214,30 @@ module.exports = {
         } catch (err) {
             throw err;
         }
+    },
 
+
+
+
+
+
+
+
+
+    // MUTATION FOR BOOK EVENT 
+    // IN SCHEMA WE DEFINE BOOK EVENT RESOLVER
+    bookEvent: async args => {
+        const fetchedEvent = await Event.findOne({ _id: args.eventId });
+        const booking = new Booking({
+            user: "5fb159c9f80f5535bb8293cc",
+            event: fetchedEvent
+        });
+        const result = await booking.save();
+        return {
+            ...result._doc,
+            _id: result.id,
+            createdAt: new Date(result._doc.createdAt).toISOString(),
+            updatedAt: new Date(result._doc.updatedAt).toISOString(),
+        }
     }
 }
