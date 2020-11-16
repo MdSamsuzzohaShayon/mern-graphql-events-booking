@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const graphQLSchema = require('./graphql/schema/index');
 const graphQLResolvers = require("./graphql/resolvers/index");
+const isAuth = require('./middleware/is-auth');
 
 
 
@@ -22,6 +23,15 @@ const app = express();
 // MIDDLEWARE 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+
+
+
+// AUTHENTICATE USER - USE MATA DATA 
+// IT ALWAYS LET'S EVERY REQUEST LET THOUGH (NEVER SENT AN ERROR)
+// BUT JUST ADD THE INFORMATIONS WHETHER IT'S AUTHENTICATED OR AN UNAUTHENTICATED REQUEST 
+// SO WE CAN RUN THIS MIDDLEWARE IN EVERY INCOMING REQUEST 
+app.use(isAuth);
 
 
 

@@ -10,39 +10,18 @@ const { transformBooking, transformEvent } = require('./merge');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // RESOLVERS FOR QUERY AND MUTATION 
 module.exports = {
 
 
 
     // BOOKING QUUERY
-    bookings: async () => {
+    // FOR SHOWING ALL BOOKINGS USER NEED TO BE AUTHENTICATED 
+    bookings: async (args, req) => {
+        // CHECK FOR AUTHENTICATION 
+        if (!req.isAuth) {
+            throw new Error("Unauthenticated!");
+        }
         try {
             const bookings = await Booking.find();
             return bookings.map(booking => {
@@ -62,7 +41,12 @@ module.exports = {
 
     // MUTATION FOR BOOK EVENT 
     // IN SCHEMA WE DEFINE BOOK EVENT RESOLVER
-    bookEvent: async args => {
+    // FOR BOOKING EVENTS USER NEED TO BE AUTHENTICATED 
+    bookEvent: async (args, req) => {
+        // CHECK FOR AUTHENTICATION 
+        if (!req.isAuth) {
+            throw new Error("Unauthenticated!");
+        }
         const fetchedEvent = await Event.findOne({ _id: args.eventId });
         const booking = new Booking({
             user: "5fb159c9f80f5535bb8293cc",
@@ -78,7 +62,12 @@ module.exports = {
 
 
     // MUTATION FOR CANCEL BOOKING 
+    // FOR CANCEL BOOKINGS USER NEED TO BE AUTHENTICATED 
     cancelBooking: async args => {
+        // CHECK FOR AUTHENTICATION 
+        if (!req.isAuth) {
+            throw new Error("Unauthenticated!");
+        }
         console.log("this mutation is working");
         try {
             const booking = await Booking.findById(args.bookingId).populate('event');

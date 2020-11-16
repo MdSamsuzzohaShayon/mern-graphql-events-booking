@@ -37,7 +37,8 @@ module.exports = {
 
 
     // MUTATION  FOR CREATING EVENTS 
-    createEvent: async args => {
+    // FOR CREATING EVENTS USER NEED TO BE AUTHENTICATED 
+    createEvent: async (args, req) => {
         /*
         const event = {
             _id: Math.random().toString(),
@@ -51,6 +52,11 @@ module.exports = {
         events.push(event);
         // return event;
         */
+
+        // CHECK FOR AUTHENTICATION 
+       if(!req.isAuth){
+           throw new Error("Unauthenticated!");
+       }
 
         // CREATING NEW USER FROM API FORM 
         const event = new Event({
