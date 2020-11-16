@@ -11,6 +11,26 @@ const Booking = require('../../models/Booking');
 
 
 
+// RETURNING DETAILS OF THE RESULT 
+const transformEvent = event => {
+    return {
+        // SPRAGE EVENT DOC 
+        ...event._doc,
+        // REPLACE ID 
+        _id: event.id,
+        // REPLACE DATE 
+        date: new Date(event._doc.date).toISOString(),
+        // REPLACE USER 
+        creator: user.bind(this, event.creator)
+    }
+}
+
+
+
+
+
+
+
 
 
 
@@ -20,14 +40,9 @@ const events = async eventsIds => {
     try {
         // $in UNDERSTOOD BY MONGODB 
         const events = await Event.find({ _id: { $in: eventsIds } })
-        events.map(event => {
-            return {
-                ...event._doc,
-                _id: event.id,
-                creator: user.bind(this, event.creator)
-            };
+        return events.map(event => {
+            return transformEvent(event);
         });
-        return events;
     } catch (err) {
         throw err;
 
@@ -58,11 +73,7 @@ const user = async userId => {
 const singleEvent = async eventId => {
     try {
         const event = await Event.findById(eventId);
-        return {
-            ...event._doc,
-            _id: event.id,
-            creator: user.bind(this, event.creator)
-        }
+        return transformEvent(event)
     } catch (err) {
         throw err;
     }
@@ -80,7 +91,7 @@ const singleEvent = async eventId => {
 
 
 
-
+// RESOLVERS FOR QUERY AND MUTATION 
 module.exports = {
 
 
@@ -90,12 +101,7 @@ module.exports = {
             const events = await Event.find();
             // console.log("Events: ", events);
             return events.map(event => {
-                return {
-                    ...event._doc,
-                    _id: event.id,
-                    date: new Date(event._doc.date).toISOString(),
-                    creator: user.bind(this, event._doc.creator)
-                }
+                return transformEvent(event)
 
             })
         } catch (err) {
@@ -173,12 +179,7 @@ module.exports = {
         try {
             // SAVING A NEW EVENT AND REFERNAL USER SAVING 
             const result = await event.save();
-            createEvent = {
-                ...result._doc,
-                _id: result._doc._id.toString(),
-                date: new Date(event._doc.date).toISOString(),
-                creator: user.bind(this, result._doc.creator)
-            };
+            createEvent = transformEvent(result);
             const creator = await User.findById("5fb159c9f80f5535bb8293cc");  // RETURNING USER FROM HERE - UP NEXT IN THEN PROMISE IT CHECK IF USER IS EXIST OR NOT
             // console.log(result);
 
@@ -272,11 +273,7 @@ module.exports = {
             const booking = await Booking.findById(args.bookingId).populate('event');
             // const booking = await Booking.findById(args.bookingId).populate('event');
             console.log("booking: ", booking);
-            const event = {
-                ...booking.event._doc,
-                _id: booking.event.id,
-                creator: user.bind(this, booking.event._doc.creator)
-            };
+            const event = transformEvent(booking.event);
             console.log("events: ", event);
             await Booking.deleteOne({ _id: args.bookingId });
             return event;
