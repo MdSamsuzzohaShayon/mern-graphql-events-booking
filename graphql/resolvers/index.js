@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const Event = require("../../models/Event");
 const User = require('../../models/User');
 const Booking = require('../../models/Booking');
+const {dateToString} = require('../../helper/date');
 
 
 
@@ -19,7 +20,7 @@ const transformEvent = event => {
         // REPLACE ID 
         _id: event.id,
         // REPLACE DATE 
-        date: new Date(event._doc.date).toISOString(),
+        date: dateToString(event._doc.date),
         // REPLACE USER 
         creator: user.bind(this, event.creator)
     }
@@ -127,8 +128,8 @@ module.exports = {
                     _id: booking.id,
                     user: user.bind(this, booking._doc.user),
                     event: singleEvent.bind(this, booking._doc.event),
-                    createdAt: new Date(booking._doc.createdAt).toISOString(),
-                    updatedAt: new Date(booking._doc.updatedAt).toISOString()
+                    createdAt: dateToString(booking._doc.createdAt),
+                    updatedAt: dateToString(booking._doc.updatedAt)
                 }
             })
         } catch (err) {
@@ -169,7 +170,7 @@ module.exports = {
             title: args.eventInput.title,
             description: args.eventInput.description,
             price: +args.eventInput.price,
-            date: new Date(args.eventInput.date),
+            date: dateToString(args.eventInput.date),
             creator: "5fb159c9f80f5535bb8293cc"
         });
         // DECLARE A UNINITILIZED VARIABLE SO LATTER ON WE CAN USE IT
@@ -256,8 +257,8 @@ module.exports = {
             _id: result.id,
             user: user.bind(this, booking._doc.user),
             event: singleEvent.bind(this, booking._doc.event),
-            createdAt: new Date(result._doc.createdAt).toISOString(),
-            updatedAt: new Date(result._doc.updatedAt).toISOString(),
+            createdAt: dateToString(result._doc.createdAt),
+            updatedAt: dateToString(result._doc.updatedAt),
         }
     },
 
