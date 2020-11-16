@@ -128,6 +128,56 @@
  ```
 
 
+ - Mutation for book event
+
+ ```
+ mutation{
+  bookEvent(eventId: "5fb1609fe270183c6e0cf4fb"){
+    _id
+    createdAt
+    user{
+      email
+    }
+  }
+}
+
+ ```
+
+
+ - Query for bookings 
+
+ ```
+query{
+  bookings{
+    createdAt
+    user{
+      email
+      createdEvents{
+        title
+      }
+    }
+    event{
+      title
+      creator{
+        email
+      }
+    }
+  }
+}
+ ```
+
+ - Mutation  cancel booking
+
+ ```
+ mutation{
+  cancelBooking(bookingId:"5fb23493ba10fe29eb458d0d"){
+    _id
+    title
+  }
+}
+ ```
+
+
 
 
 

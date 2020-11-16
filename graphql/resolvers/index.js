@@ -15,6 +15,7 @@ const Booking = require('../../models/Booking');
 
 
 // EXTRA FUNCTION FOR HELPING 
+// FETCHING EVENTS INFORMATION FROM DATABASE USING EVENT ID 
 const events = async eventsIds => {
     try {
         // $in UNDERSTOOD BY MONGODB 
@@ -34,6 +35,7 @@ const events = async eventsIds => {
 }
 
 // EXTRA FUNCTION FOR HELPING 
+// FETCHING USERS INFORMATION FROM DATABASE USING USER ID 
 const user = async userId => {
     try {
         const user = await User.findById(userId)
@@ -51,7 +53,20 @@ const user = async userId => {
 
 
 
-
+// EXTRA FUNCTION FOR HELPING 
+// FETCHING SINGLE EVENTS INFORMATION FROM DATABASE USING EVENT ID 
+const singleEvent = async eventId => {
+    try {
+        const event = await Event.findById(eventId);
+        return {
+            ...event._doc,
+            _id: event.id,
+            creator: user.bind(this, event.creator)
+        }
+    } catch (err) {
+        throw err;
+    }
+}
 
 
 
@@ -96,7 +111,7 @@ module.exports = {
 
 
 
-    // BOOKING MUTATIONS
+    // BOOKING QUUERY
     bookings: async () => {
         try {
             const bookings = await Booking.find();
@@ -104,6 +119,8 @@ module.exports = {
                 return {
                     ...booking._doc,
                     _id: booking.id,
+                    user: user.bind(this, booking._doc.user),
+                    event: singleEvent.bind(this, booking._doc.event),
                     createdAt: new Date(booking._doc.createdAt).toISOString(),
                     updatedAt: new Date(booking._doc.updatedAt).toISOString()
                 }
@@ -236,8 +253,40 @@ module.exports = {
         return {
             ...result._doc,
             _id: result.id,
+            user: user.bind(this, booking._doc.user),
+            event: singleEvent.bind(this, booking._doc.event),
             createdAt: new Date(result._doc.createdAt).toISOString(),
             updatedAt: new Date(result._doc.updatedAt).toISOString(),
         }
+    },
+
+
+
+
+
+
+    // MUTATION FOR CANCEL BOOKING 
+    cancelBooking: async args => {
+        console.log("this mutation is working");
+        try {
+            const booking = await Booking.findById(args.bookingId).populate('event');
+            // const booking = await Booking.findById(args.bookingId).populate('event');
+            console.log("booking: ", booking);
+            const event = {
+                ...booking.event._doc,
+                _id: booking.event.id,
+                creator: user.bind(this, booking.event._doc.creator)
+            };
+            console.log("events: ", event);
+            await Booking.deleteOne({ _id: args.bookingId });
+            return event;
+
+        } catch (err) {
+            throw err;
+
+        }
     }
+
+
+
 }
