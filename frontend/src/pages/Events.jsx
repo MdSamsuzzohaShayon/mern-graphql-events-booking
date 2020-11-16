@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 class Events extends Component {
     render() {
@@ -10,4 +10,4 @@ class Events extends Component {
     }
 }
 
-export default Events
+export default Events;
