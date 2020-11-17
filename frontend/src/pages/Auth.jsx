@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
+import AuthContext from "../context/auth-context";
 
 class Auth extends Component {
-
-
-    state = {
-        isLogin: true
-    };
-
 
 
 
@@ -15,10 +10,16 @@ class Auth extends Component {
     // https://reactjs.org/docs/refs-and-the-dom.html
     constructor(props) {
         super(props);
+        this.state = {
+            isLogin: true
+        }
         this.emailEl = React.createRef();
         this.passwordEl = React.createRef();
 
     }
+
+
+    static contextType = AuthContext;
 
 
 
@@ -101,6 +102,9 @@ class Auth extends Component {
             })
             .then(resData => {
                 console.log(resData);
+                if (resData.data.login.token) {
+                    this.context.login(resData.data.login.token, resData.data.login.userId, resData.data.login.tokenExpiration);
+                }
             })
             .catch(err => {
                 console.log(err);
