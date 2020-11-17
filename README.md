@@ -216,6 +216,12 @@ query{
 
 
 
+ - Mutation and query using react js front end
+
+ ![Graph QL](screenshots/graphql_16.png)
+
+
+
 
 
 
