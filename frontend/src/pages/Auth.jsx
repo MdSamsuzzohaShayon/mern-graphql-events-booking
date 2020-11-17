@@ -25,6 +25,43 @@ class Auth extends Component {
 
 
 
+        const host = "http://localhost:8000/graphql";
+        // SENDING REQUEST TO BACKEND GRAPHQL API 
+
+        // createUser(userInput: UserInput): User
+        const requestBody = {
+            query: `
+                mutation{
+                    createUser(userInput: {email: "${email}", password: "${password}"}){
+                        _id
+                        email
+                    }
+                }
+            `
+        };
+
+        fetch(`${host}`, {
+            method : "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res =>{
+                if(res.status !== 200 && res.status !== 201){
+                    throw new Error("Failed");
+                }
+                return res.json();
+            })
+            .then(resData =>{
+                console.log(resData);
+            })
+            .catch(err =>{
+                console.log(err);
+                throw err;
+            })
+        ;
+
 
 
 
@@ -48,7 +85,7 @@ class Auth extends Component {
                     <Button.Group>
                         <Button color="teal" type="submit">Submit</Button>
                         <Button.Or />
-                        <Button color="teal" type="button">Switch to Sign Up</Button>
+                        <Button color="teal" type="button">Switch to Login</Button>
                     </Button.Group>
                 </Form>
             </Container>
