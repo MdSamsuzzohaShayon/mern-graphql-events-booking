@@ -1,4 +1,4 @@
-import { Menu, Container } from 'semantic-ui-react';
+import { Menu, Container, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import AuthContext from "../context/auth-context";
 
@@ -15,27 +15,44 @@ const Navigation = () => {
                 return (
                     <Menu stackable >
                         <Container>
-                            {!context.token &&
-                                <NavLink to="/auth" >
-                                    <Menu.Item name='auth' >
-                                        Auth
-                                    </Menu.Item>
-                                </NavLink>
-                            }
-
-                            <NavLink to="/events" >
-                                <Menu.Item name='events' >
-                                    Events
+                            <NavLink to="/" >
+                                <Menu.Item style={{ color: "teal" }} name='event_management' >
+                                    Event Management
                                 </Menu.Item>
                             </NavLink>
+                            <Menu.Menu position="right">
+                                {!context.token &&
+                                    <NavLink to="/auth" >
+                                        <Menu.Item name='auth' >
+                                            Auth
+                                        </Menu.Item>
+                                    </NavLink>
+                                }
 
-                            {context.token &&
-                                <NavLink to="/bookings" >
-                                    <Menu.Item name='bookings' >
-                                        Bookings
+                                <NavLink to="/events" >
+                                    <Menu.Item name='events' >
+                                        Events
                                     </Menu.Item>
                                 </NavLink>
-                            }
+
+                                {context.token && (
+                                    <React.Fragment>
+                                        <NavLink to="/bookings" >
+                                            <Menu.Item name='bookings' >
+                                                Bookings
+                                        </Menu.Item>
+                                        </NavLink>
+
+                                        <Menu.Item name='logout' >
+                                            <Button onClick={context.logout} color="red">
+                                                Logout
+                                                </Button>
+                                        </Menu.Item>
+                                    </React.Fragment>
+
+                                )}
+                            </Menu.Menu>
+
                         </Container>
                     </Menu>
                 );
