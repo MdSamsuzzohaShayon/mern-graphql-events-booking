@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
 
 class Auth extends Component {
+
+
+    state = {
+        isLogin: true
+    };
+
+
+
+
     // REFERANCES OR REF API BUILT INTO REACT 
     // https://reactjs.org/docs/refs-and-the-dom.html
     constructor(props) {
@@ -9,6 +18,15 @@ class Auth extends Component {
         this.emailEl = React.createRef();
         this.passwordEl = React.createRef();
 
+    }
+
+
+
+    switchModeHandler = () => {
+        this.setState(prevState => {
+            // REVERT THE VALUE 
+            return { isLogin: !prevState.isLogin }
+        });
     }
 
     submitHandler = (event) => {
@@ -28,9 +46,27 @@ class Auth extends Component {
         const host = "http://localhost:8000/graphql";
         // SENDING REQUEST TO BACKEND GRAPHQL API 
 
-        // createUser(userInput: UserInput): User
-        const requestBody = {
+        // QUERY FOR LOGIN 
+        // login(email: String!, password: String!): AuthData!
+        let requestBody = {
             query: `
+                query{
+                    login(email: "${email}", password: "${password}"){
+                        userId
+                        token
+                        tokenExpiration
+                    }
+                }
+            `
+        };
+
+
+
+        if (!this.state.isLogin) {
+            // MUTATION  FOR SIGN UP 
+            // createUser(userInput: UserInput): User
+            requestBody = {
+                query: `
                 mutation{
                     createUser(userInput: {email: "${email}", password: "${password}"}){
                         _id
@@ -38,34 +74,50 @@ class Auth extends Component {
                     }
                 }
             `
-        };
+            };
+        }
+
+
+
+
+
+
+
+
+
 
         fetch(`${host}`, {
-            method : "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
+            method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {
                 "Content-Type": "application/json"
             }
         })
-            .then(res =>{
-                if(res.status !== 200 && res.status !== 201){
-                    throw new Error("Failed");
+            .then(res => {
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
                 }
                 return res.json();
             })
-            .then(resData =>{
+            .then(resData => {
                 console.log(resData);
             })
-            .catch(err =>{
+            .catch(err => {
                 console.log(err);
-                throw err;
-            })
-        ;
-
-
-
+            });
 
     }
+
+
+
+
+
+
+
+
+
+
+
 
     render() {
         return (
@@ -85,7 +137,7 @@ class Auth extends Component {
                     <Button.Group>
                         <Button color="teal" type="submit">Submit</Button>
                         <Button.Or />
-                        <Button color="teal" type="button">Switch to Login</Button>
+                        <Button color="teal" onClick={this.switchModeHandler} type="button">Switch to {this.state.isLogin ? "Signup" : "Login"}</Button>
                     </Button.Group>
                 </Form>
             </Container>
