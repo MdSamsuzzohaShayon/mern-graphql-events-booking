@@ -1,9 +1,33 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { Container, Form, Input, Button } from 'semantic-ui-react';
 
-class Auth extends Component{
-    render(){
+class Auth extends Component {
+    render() {
         return (
-            <div className="container">Authpage</div>
+            <Container>
+                <br/><br/>
+                <Form>
+                    <Form.Group widths="equal">
+                        <Form.Field
+                            control={Input}
+                            label="Email"
+                            placeholder="Enter your email"
+                        />
+                        <Form.Field
+                            control={Input}
+                            label="Password"
+                            placeholder="Enter your password"
+                            type="password"
+                        />
+                    </Form.Group>
+                    <Button.Group>
+                        <Button color="teal" type="submit">Submit</Button>
+                        <Button.Or />
+                        <Button color="teal" type="submit">Switch to Sign Up</Button>
+                    </Button.Group>
+                </Form>
+            </Container>
+
         );
     }
 }

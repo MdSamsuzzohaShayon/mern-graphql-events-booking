@@ -9,24 +9,24 @@ import React from 'react';
 
 const Navigation = () => {
     return (
-        <Menu>
+        <Menu stackable >
             <Container>
                 <NavLink to="/auth" >
                     <Menu.Item name='auth' >
                         Auth
-                </Menu.Item>
+                    </Menu.Item>
                 </NavLink>
 
                 <NavLink to="/events" >
                     <Menu.Item name='events' >
                         Events
-                </Menu.Item>
+                    </Menu.Item>
                 </NavLink>
 
                 <NavLink to="/bookings" >
                     <Menu.Item name='bookings' >
                         Bookings
-                </Menu.Item>
+                    </Menu.Item>
                 </NavLink>
             </Container>
         </Menu>

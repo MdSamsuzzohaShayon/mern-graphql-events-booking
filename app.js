@@ -73,7 +73,7 @@ app.use('/graphql', graphqlHttp({
 
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.MONGO_DB}`, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
