@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Button, Header, Segment, Form, List } from 'semantic-ui-react';
+import { Container, Button, Header, Segment, Form } from 'semantic-ui-react';
+import EventList from "../components/EventList";
 import ModalCom from "../components/ModalCom";
 import AuthContext from "../context/auth-context";
 
@@ -219,9 +220,6 @@ class Events extends Component {
     // }
 
     render() {
-        const eventList = this.state.events.map(event =>{
-            return <List.Item key={event._id}> <Segment color="teal">{event.title} </Segment> </List.Item>;
-        });
         return (
             <React.Fragment>
 
@@ -252,10 +250,7 @@ class Events extends Component {
                             <br />
                         </Segment>
                     }
-                        <List size="large" animated>
-                            {eventList}
-                            
-                        </List>
+                        <EventList events={this.state.events} />
                 </Container>
             </React.Fragment>
 
