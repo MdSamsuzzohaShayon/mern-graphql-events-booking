@@ -13,19 +13,19 @@ const ModalCom = props => {
         >
             <Modal.Header>Create an event </Modal.Header>
             <Modal.Content >
-               {props.formContent}
+                {props.formContent}
             </Modal.Content>
             <Modal.Actions>
-                <Button color='black' onClick={props.onClose}>
-                    Close
-        </Button>
-                <Button
-                    content="Form Submit"
+                <Button color='black' onClick={props.onClose}> Close</Button>
+                {/* FORM SUBMISSION BUTTON */}
+                {/* <Button
+                    content="Submit"
+                    type="submit"
                     labelPosition='right'
                     icon='checkmark'
                     onClick={props.onOpen}
                     positive
-                />
+                /> */}
             </Modal.Actions>
         </Modal>
     );
