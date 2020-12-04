@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
 import AuthContext from "../context/auth-context";
 
+
 class Auth extends Component {
 
 
@@ -44,7 +45,7 @@ class Auth extends Component {
 
 
 
-        const host = "http://localhost:8000/graphql";
+        
         // SENDING REQUEST TO BACKEND GRAPHQL API 
 
         // QUERY FOR LOGIN 
@@ -87,7 +88,7 @@ class Auth extends Component {
 
 
 
-        fetch(`${host}`, {
+        fetch(`http://localhost:8000/graphql`, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {

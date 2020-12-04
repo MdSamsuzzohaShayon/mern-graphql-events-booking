@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Button, Header, Segment, Form } from 'semantic-ui-react';
 import ModalCom from "../components/ModalCom";
+import AuthContext from "../context/auth-context";
+
+
 
 
 
@@ -17,6 +20,10 @@ class Events extends Component {
         this.dateElRef = React.createRef();
         this.descriptionElRef = React.createRef();
     }
+
+
+    // ACCESSING TOKEN FROM CONTEXT API 
+    static contextType = AuthContext;
 
 
 
@@ -43,14 +50,67 @@ class Events extends Component {
         const price = +this.priceElRef.current.value;  // PLUS SIGN CONVERT IT TO NUMBER VARIABLE
         const date = this.dateElRef.current.value;
         const description = this.descriptionElRef.current.value;
-        if (title.trim().length === 0 || price.trim().length === 0 || date.trim().length === 0 || description.trim().length === 0) {
+        if (title.trim().length === 0 || price <= 0 || date.trim().length === 0 || description.trim().length === 0) {
             return;
         }
         const event = { title, price, date, description };
         console.log("Event: ", event);
-        this.setState({
-            open: false
-        });
+
+
+
+
+        // createEvent(eventInput: EventInput): Event
+        /*
+        input EventInput{
+            title: String!
+            description: String!
+            price: Float!
+            date: String!
+        }
+        */
+        // REQUEST BODY WILL BE ALWAYS SAME SO WEB DON'T NEED TO CHECK LOGIN OR NOT
+        const requestBody = {
+            query: `
+          mutation {
+            createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
+              _id
+              title
+              description
+              date
+              price
+              creator {
+                _id
+                email
+              }
+            }
+          }
+        `
+        };
+
+
+
+        const token = this.context.token;
+        fetch("http://localhost:8000/graphql", {
+            method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+            .then(res => {
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                console.log(resData);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
     }
 
 
@@ -98,31 +158,37 @@ class Events extends Component {
     render() {
         return (
             <React.Fragment>
-                <br />
+
                 <Container >
+                    <br />
 
 
                     <br /><br />
-                    <Segment >
-                        <br />
-                        <Header textAlign="center">
-                            <h2>Share your own events</h2>
-                            <ModalCom
-                                onSubmit={this.modalHandleSubmit}
-                                title="Add event"
-                                open={this.state.open}
-                                onOpen={this.openTheModal}
-                                onClose={this.closeTheModal}
-                                trigger={<Button color="teal">
-                                    Create Event</Button>}
-                                formContent={this.formContent()}
-                            >
+                    {/* IF THE TOKEN IS EXIST WE ARE GOING TO RENDER THE SEGMENT OF CREATE EVENT  */}
+                    {this.context.token &&
+                        <Segment >
+                            <br />
+                            <Header textAlign="center">
+                                <h2>Share your own events</h2>
+                                <ModalCom
+                                    onSubmit={this.modalHandleSubmit}
+                                    title="Add event"
+                                    open={this.state.open}
+                                    onOpen={this.openTheModal}
+                                    onClose={this.closeTheModal}
+                                    trigger={<Button color="teal">
+                                        Create Event</Button>}
+                                    formContent={this.formContent()}
+                                >
 
-                            </ModalCom>
-                        </Header>
-                        <br />
-                    </Segment>
+                                </ModalCom>
+                            </Header>
+                            <br />
+                        </Segment>
+                }
+                <Segment >
 
+                </Segment>
                 </Container>
             </React.Fragment>
 
