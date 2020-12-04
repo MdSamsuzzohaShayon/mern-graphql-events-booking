@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Header, Segment, Form } from 'semantic-ui-react';
+import { Container, Button, Header, Segment, Form, List } from 'semantic-ui-react';
 import ModalCom from "../components/ModalCom";
 import AuthContext from "../context/auth-context";
 
@@ -12,7 +12,8 @@ class Events extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            events: []
         };
         // https://reactjs.org/docs/refs-and-the-dom.html
         this.titleElRef = React.createRef();
@@ -24,6 +25,13 @@ class Events extends Component {
 
     // ACCESSING TOKEN FROM CONTEXT API 
     static contextType = AuthContext;
+
+
+
+
+    componentDidMount() {
+        this.fetchEvents();
+    }
 
 
 
@@ -105,12 +113,67 @@ class Events extends Component {
                 return res.json();
             })
             .then(resData => {
-                console.log(resData);
+                this.fetchEvents();
             })
             .catch(err => {
                 console.log(err);
             });
 
+    }
+
+
+    fetchEvents = () => {
+        // events: [Event!]!
+        /*
+        type Event{
+        _id: ID!
+        title: String!
+        description: String!
+        price: Float!
+        date: String!
+        creator: User!
+    }
+        */
+        // GETTING ALL EVENTS
+        const requestBody = {
+            query: `
+                query {
+                    events{
+                    _id
+                    title
+                    description
+                    date
+                    price
+                    creator {
+                        _id
+                        email
+                    }
+                    }
+                }
+        `
+        };
+
+
+        fetch("http://localhost:8000/graphql", {
+            method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                const events = resData.data.events;
+                this.setState({ events });
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
 
@@ -156,6 +219,9 @@ class Events extends Component {
     // }
 
     render() {
+        const eventList = this.state.events.map(event =>{
+            return <List.Item key={event._id}> <Segment color="teal">{event.title} </Segment> </List.Item>;
+        });
         return (
             <React.Fragment>
 
@@ -185,10 +251,11 @@ class Events extends Component {
                             </Header>
                             <br />
                         </Segment>
-                }
-                <Segment >
-
-                </Segment>
+                    }
+                        <List size="large" animated>
+                            {eventList}
+                            
+                        </List>
                 </Container>
             </React.Fragment>
 
