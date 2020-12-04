@@ -210,14 +210,7 @@ class Events extends Component {
 
 
 
-    // GRAPHQL SCEMA FOR CREATING EVENTS 
-    // createEvent(eventInput: EventInput): Event
-    // input EventInput{
-    //     title: String!
-    //     description: String!
-    //     price: Float!
-    //     date: String!
-    // }
+
 
     render() {
         return (
@@ -250,7 +243,10 @@ class Events extends Component {
                             <br />
                         </Segment>
                     }
-                        <EventList events={this.state.events} />
+                        <EventList 
+                        authUserId={this.context.userId} 
+                        events={this.state.events} 
+                        />
                 </Container>
             </React.Fragment>
 
