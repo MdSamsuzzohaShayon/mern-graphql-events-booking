@@ -61,9 +61,14 @@ module.exports = {
 
 
 
+
+
+
+
+
     // MUTATION FOR CANCEL BOOKING 
     // FOR CANCEL BOOKINGS USER NEED TO BE AUTHENTICATED 
-    cancelBooking: async args => {
+    cancelBooking: async (args, req)  => {
         // CHECK FOR AUTHENTICATION 
         if (!req.isAuth) {
             throw new Error("Unauthenticated!");

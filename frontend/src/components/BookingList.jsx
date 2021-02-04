@@ -4,7 +4,7 @@ import { List, Segment, Button, Header, Grid } from 'semantic-ui-react';
 const BookingList = props => {
     return (
         <React.Fragment>
-            <List>
+            <List animated>
                 {props.bookings.map(booking => {
                     return (
                         <List.Item key={booking._id}>
@@ -17,7 +17,7 @@ const BookingList = props => {
                                         </Header>
                                     </Grid.Column>
                                     <Grid.Column textAlign="right">
-                                        <Button color="red" >Cancel</Button>
+                                        <Button color="red" onClick={props.onDelete.bind(this, booking._id)} >Cancel</Button>
                                     </Grid.Column>
                                 </Grid>
                             </Segment>
@@ -28,5 +28,10 @@ const BookingList = props => {
         </React.Fragment>
     )
 }
+
+
+
+
+
 
 export default BookingList;
