@@ -189,7 +189,7 @@ class Events extends Component {
                 // USING CUSTOM LEADER 
                 setTimeout(() => {
                     this.setState({ events, isLoading: false });
-                }, 1000);
+                }, 600);
             })
             .catch(err => {
                 console.log(err);

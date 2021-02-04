@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, List, Loader, Dimmer } from 'semantic-ui-react';
 import AuthContext from '../context/auth-context';
+import BookingList from '../components/BookingList';
 
 class Bookings extends Component {
     constructor(props) {
@@ -105,9 +106,10 @@ class Bookings extends Component {
                 {this.state.isLoading ? <Dimmer active>
                     <Loader size='massive' >Loading</Loader>
                 </Dimmer> : <Container >
-                        <List>
+                        {/* <List>
                             {this.state.bookings.map(booking => <List.Item key={booking._id}>{booking.event.title} - {new Date(booking.createdAt).toLocaleDateString()}</List.Item>)}
-                        </List>
+                        </List> */}
+                        <BookingList bookings={this.state.bookings} />
                     </Container>}
 
             </React.Fragment>
