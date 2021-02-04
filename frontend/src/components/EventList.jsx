@@ -6,39 +6,7 @@ import { Segment, List, Button, Header, Grid, Divider, Card, Modal } from 'seman
 const EventList = (props) => {
     const [open, setOpen] = useState(false);
 
-    // function closeTheModal(e) {
-    //     e.preventDefault();
-    //     console.log("Opening the modal");
-    //     setOpen(prevOpen => prevOpen = false);
-    // }
 
-    // function openTheModal(e) {
-    //     e.preventDefault();
-    //     console.log("closing the modal");
-    //     setOpen(prevOpen => prevOpen = true);
-    // }
-
-    // function showModalContent(e) {
-    //     e.preventDefault();
-    //     console.log("Modal content");
-    //     return (
-    //         <Card>
-    //             <Card.Content>
-    //                 <Card.Header>Daniel</Card.Header>
-    //                 <Card.Meta>Joined in 2016</Card.Meta>
-    //                 <Card.Description>
-    //                     Daniel is a comedian living in Nashville.
-    //                 </Card.Description>
-    //             </Card.Content>
-    //             <Card.Content extra>
-    //                 <a>
-    //                     <Icon name='user' />
-    //     10 Friends
-    //   </a>
-    //             </Card.Content>
-    //         </Card>
-    //     );
-    // }
 
 
 
@@ -85,11 +53,14 @@ const EventList = (props) => {
                             </Modal.Description>
                         </Modal.Content>
                         <Modal.Actions>
+
                             <Button color='black' onClick={() => setOpen(false)}>
-                                Nope
+                                Cancel
                             </Button>
+
+                            {/* BOOK EVENT  */}
                             <Button
-                                content="Yep, that's me"
+                                content="Book Event"
                                 labelPosition='right'
                                 icon='checkmark'
                                 onClick={() => setOpen(false)}
