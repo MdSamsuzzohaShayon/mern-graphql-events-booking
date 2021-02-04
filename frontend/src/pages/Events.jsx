@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Header, Segment, Form } from 'semantic-ui-react';
+import { Container, Button, Header, Segment, Form, Dimmer, Loader } from 'semantic-ui-react';
 import EventList from "../components/EventList";
 import ModalCom from "../components/ModalCom";
 import AuthContext from "../context/auth-context";
@@ -14,7 +14,8 @@ class Events extends Component {
         super(props);
         this.state = {
             open: false,
-            events: []
+            events: [],
+            isLoading: false
         };
         // https://reactjs.org/docs/refs-and-the-dom.html
         this.titleElRef = React.createRef();
@@ -127,7 +128,7 @@ class Events extends Component {
                             _id: this.context.userId
                         }
                     });
-                    return {events: updatedEvents};
+                    return { events: updatedEvents };
                 });
             })
             .catch(err => {
@@ -138,6 +139,7 @@ class Events extends Component {
 
 
     fetchEvents = () => {
+        this.setState({ isLoading: true });
         // events: [Event!]!
         /*
         type Event{
@@ -184,10 +186,14 @@ class Events extends Component {
             })
             .then(resData => {
                 const events = resData.data.events;
-                this.setState({ events });
+                // USING CUSTOM LEADER 
+                setTimeout(() => {
+                    this.setState({ events, isLoading: false });
+                }, 1000);
             })
             .catch(err => {
                 console.log(err);
+                this.setState({ isLoading: false });
             });
     }
 
@@ -257,10 +263,15 @@ class Events extends Component {
                             <br />
                         </Segment>
                     }
-                    <EventList
-                        authUserId={this.context.userId}
-                        events={this.state.events}
-                    />
+                    {this.state.isLoading ? 
+                        <Dimmer active>
+                            <Loader size='massive' >Loading</Loader>
+                        </Dimmer>
+                    : <EventList
+                            authUserId={this.context.userId}
+                            events={this.state.events}
+                        />}
+
                 </Container>
             </React.Fragment>
 
