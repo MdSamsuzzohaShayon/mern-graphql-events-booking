@@ -5,6 +5,7 @@ import { Segment, List, Button, Header, Grid, Divider, Modal } from 'semantic-ui
 
 const EventList = (props) => {
     const [open, setOpen] = useState(false);
+    const [selectEvents, setSelectedEvents] = useState(null);
 
 
 
@@ -29,7 +30,7 @@ const EventList = (props) => {
         const requestBody = {
             query: `
                 mutation {
-                    bookEvent (eventId: "${event._id}"){
+                    bookEvent (eventId: "${selectEvents}"){
                     createdAt
                     updatedAt
                     }
@@ -68,6 +69,13 @@ const EventList = (props) => {
 
 
     const events = props.events.map(event => {
+        console.log("Event ID: ", event._id);
+        function openModalHandler(e){
+            e.preventDefault();
+            setOpen(prevOpen => prevOpen = true);
+            console.log("Open events ID: ", e.target.value);
+            setSelectedEvents(e.target.value);
+        }
         return (
             <List.Item
                 key={event._id}
@@ -92,9 +100,10 @@ const EventList = (props) => {
 
                     {props.authUserId === event.creator._id ? <p><br />you are owner of this event</p> : <Modal
                         onClose={() => setOpen(false)}
-                        onOpen={() => setOpen(true)}
+                        // onOpen={() => setOpen(true)}
+                        onOpen={openModalHandler}
                         open={open}
-                        trigger={<Button color="teal">View Details</Button>}
+                        trigger={<Button color="teal" value={event._id} >View Details</Button>}
                     >
                         <Modal.Header>Event Details</Modal.Header>
                         <Modal.Content >
