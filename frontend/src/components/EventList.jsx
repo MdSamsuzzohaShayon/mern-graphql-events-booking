@@ -12,10 +12,7 @@ const EventList = (props) => {
                     <Header as="h3" color="teal"  >
                         {event.title}
                     </Header>
-                    <br />
-                    price : $123
-                    
-                    <br />
+                    <Header as="h5" color="red">Price $ {event.price}</Header>
                     {props.authUserId === event.creator._id ? <p><br />you are owner of this event</p> : <Button color="teal">View Details</Button>}
                 </Segment>
 
