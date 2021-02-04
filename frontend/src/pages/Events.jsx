@@ -233,6 +233,7 @@ class Events extends Component {
 
 
     render() {
+        console.log("Token from context: ", this.context.token);
         return (
             <React.Fragment>
 
@@ -270,6 +271,7 @@ class Events extends Component {
                     : <EventList
                             authUserId={this.context.userId}
                             events={this.state.events}
+                            context={this.context}
                         />}
 
                 </Container>

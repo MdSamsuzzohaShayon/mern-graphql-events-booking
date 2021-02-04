@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Segment, List, Button, Header, Grid, Divider, Card, Modal } from 'semantic-ui-react';
+import { Segment, List, Button, Header, Grid, Divider, Modal } from 'semantic-ui-react';
 
 
 
@@ -9,6 +9,62 @@ const EventList = (props) => {
 
 
 
+    function bookEventHandler(event) {
+        if(!props.context.token){
+            setOpen(prevOpen => prevOpen=false);
+            return;
+        }
+        console.log("Token: ", props.context.token);
+        // e.preventDefault();
+        setOpen(prevOpen => prevOpen=false);
+        // type Booking{
+        //     _id: ID!
+        //     event: Event!
+        //     user: User!
+        //     createdAt: String!
+        //     updatedAt: String!
+        // }
+        // bookEvent(eventId: ID!): Booking!
+
+        const requestBody = {
+            query: `
+                mutation {
+                    bookEvent (eventId: "${event._id}"){
+                    createdAt
+                    updatedAt
+                    }
+                }
+        `,
+        };
+
+
+        fetch("http://localhost:8000/graphql", {
+            method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + props.context.token
+            }
+        })
+            .then(res => {
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                // const events = resData.data.events;
+                // USING CUSTOM LEADER 
+                setTimeout(() => {
+                    // this.setState({ events, isLoading: false });
+                    console.log(resData);
+                }, 1000);
+            })
+            .catch(err => {
+                console.log(err);
+                // this.setState({ isLoading: false });
+            });
+    }
 
 
     const events = props.events.map(event => {
@@ -60,10 +116,10 @@ const EventList = (props) => {
 
                             {/* BOOK EVENT  */}
                             <Button
-                                content="Book Event"
+                                content={props.context.token? "Book Event" : "Confirm"}
                                 labelPosition='right'
                                 icon='checkmark'
-                                onClick={() => setOpen(false)}
+                                onClick={e => bookEventHandler(event)}
                                 positive
                             />
                         </Modal.Actions>
