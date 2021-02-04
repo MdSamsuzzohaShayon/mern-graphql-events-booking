@@ -1,5 +1,7 @@
+// THIS WILL ONLY WORK ON CALL BASED COMPONENT 
+
 import React from 'react';
-import { Button, Form, Header, Modal, Image } from "semantic-ui-react";
+import { Button,  Modal } from "semantic-ui-react";
 
 
 
@@ -11,9 +13,9 @@ const ModalCom = props => {
             open={props.open}
             trigger={props.trigger}
         >
-            <Modal.Header>Create an event </Modal.Header>
+            <Modal.Header>{props.title} </Modal.Header>
             <Modal.Content >
-                {props.formContent}
+                {props.modalContent}
             </Modal.Content>
             <Modal.Actions>
                 <Button color='black' onClick={props.onClose}> Close</Button>

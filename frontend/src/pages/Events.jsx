@@ -255,7 +255,7 @@ class Events extends Component {
                                     onClose={this.closeTheModal}
                                     trigger={<Button color="teal">
                                         Create Event</Button>}
-                                    formContent={this.formContent()}
+                                    modalContent={this.formContent()}
                                 >
 
                                 </ModalCom>
