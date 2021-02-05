@@ -118,14 +118,17 @@ class Bookings extends Component {
 
         // GETTING ALL bookings
         const requestBody = {
-                query: `
-                    mutation {
-                        cancelBooking(bookingId: "${bookingId}"){
+            query: `
+                    mutation CancelBooking($id: ID!) {
+                        cancelBooking(bookingId: $id){
                             _id
                             title
                         }
                     }
             `,
+            variables: {
+                id: bookingId
+            }
         };
 
 
