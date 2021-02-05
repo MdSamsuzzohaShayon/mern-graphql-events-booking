@@ -40,6 +40,9 @@ const events = async eventsIds => {
     try {
         // $in UNDERSTOOD BY MONGODB 
         const events = await Event.find({ _id: { $in: eventsIds } })
+        events.sort((a, b)=>{
+            return eventsIds.indexOf(a._id.toString()) - eventsIds.indexOf(b._id.toString());
+        })
         return events.map(event => {
             return transformEvent(event);
         });
