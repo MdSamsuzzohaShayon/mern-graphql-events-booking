@@ -220,6 +220,23 @@ query{
 
  ![Graph QL](screenshots/graphql_16.png)
 
+ - Bug fixing for some query that doesn't work (the query below doesn't work)
+
+ ```
+ {
+  events{
+    _id
+    creator{
+      _id
+      email
+      createdEvents{
+        title
+      }
+    }
+  }
+}
+ ```
+
 
 
 

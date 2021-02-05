@@ -4,6 +4,11 @@ const { dateToString } = require('../../helper/date');
 const DataLoader = require("dataloader");
 
 
+
+
+
+
+
 // https://github.com/graphql/dataloader
 // DataLoader is a generic utility to be used as part of your application's data fetching layer to provide a simplified and consistent API over various remote data sources such as databases or web services via batching and caching.
 // LOADING OUR EVENTS 
@@ -13,8 +18,18 @@ const eventLoader = new DataLoader((eventIds)=>{
 });
 
 
+
+
+// HAS SOME BUGS IN USERLOADER 
 const userLoader = new DataLoader(userIds=>{
     console.log(userIds);
+    // const promises = userIDs.map(id => {
+    //     return db('user_posts')
+    //       .where('user_id', id);
+    //   });
+    
+    //   return Promise.all(promises);
+    
     return User.find({_id: {$in: userIds}});
 });
 
@@ -34,6 +49,24 @@ const events = async eventsIds => {
     }
 }
 
+
+// EXTRA FUNCTION FOR HELPING 
+// FETCHING SINGLE EVENTS INFORMATION FROM DATABASE USING EVENT ID 
+const singleEvent = async eventId => {
+    try {
+        // const event = await Event.findById(eventId);
+        const event = await eventLoader.load(eventId.toString());
+        return event;
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
+
+
+
 // EXTRA FUNCTION FOR HELPING 
 // FETCHING USERS INFORMATION FROM DATABASE USING USER ID 
 const user = async userId => {
@@ -45,7 +78,8 @@ const user = async userId => {
             ...user._doc,
             _id: user.id,
             // createdEvents: events.bind(this, user._doc.createdEvents)
-            createdEvents: eventLoader.load.bind(this, user._doc.createdEvents)
+            // createdEvents: eventLoader.load.bind(this, user._doc.createdEvents)
+            createdEvents: ()=> eventLoader.loadMany(user._doc.createdEvents)
 
         }
     } catch (err) {
@@ -57,17 +91,6 @@ const user = async userId => {
 
 
 
-// EXTRA FUNCTION FOR HELPING 
-// FETCHING SINGLE EVENTS INFORMATION FROM DATABASE USING EVENT ID 
-const singleEvent = async eventId => {
-    try {
-        // const event = await Event.findById(eventId);
-        const event = await eventLoader.load(eventId);
-        return event;
-    } catch (err) {
-        throw err;
-    }
-}
 
 
 
@@ -93,17 +116,17 @@ const transformEvent = event => {
 }
 
 
-
 const transformBooking = booking => {
     return {
-        ...booking._doc,
-        _id: booking.id,
-        user: user.bind(this, booking._doc.user),
-        event: singleEvent.bind(this, booking._doc.event),
-        createdAt: dateToString(booking._doc.createdAt),
-        updatedAt: dateToString(booking._doc.updatedAt)
-    }
-}
+      ...booking._doc,
+      _id: booking.id,
+      user: user.bind(this, booking._doc.user),
+      event: singleEvent.bind(this, booking._doc.event),
+      createdAt: dateToString(booking._doc.createdAt),
+      updatedAt: dateToString(booking._doc.updatedAt)
+    };
+  };
+  
 
 
 
