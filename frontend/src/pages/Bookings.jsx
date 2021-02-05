@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Tab, Loader, Dimmer,Segment } from 'semantic-ui-react';
 import AuthContext from '../context/auth-context';
 import BookingList from '../components/BookingList';
+import BookingCart from '../components/BookingCart';
 
 class Bookings extends Component {
     constructor(props) {
@@ -51,6 +52,7 @@ class Bookings extends Component {
                         _id
                         title
                         date
+                        price
                     }
                     }
                 }
@@ -177,7 +179,7 @@ class Bookings extends Component {
         if (!this.state.isLoading) {
             const panes = [
                 { menuItem: 'List', render: () => <Tab.Pane><BookingList bookings={this.state.bookings} onDelete={this.deleteBookingHandler} /></Tab.Pane> },
-                { menuItem: 'Charts', render: () => <Tab.Pane>Charts</Tab.Pane> },
+                { menuItem: 'Charts', render: () => <Tab.Pane><BookingCart bookings={this.state.bookings} /></Tab.Pane> },
             ]
             content = (
                 <React.Fragment>
@@ -191,9 +193,7 @@ class Bookings extends Component {
         }
         return (
             <React.Fragment>
-
                 {content}
-
             </React.Fragment>
         )
     }

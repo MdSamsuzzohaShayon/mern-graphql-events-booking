@@ -11,13 +11,13 @@ const EventList = (props) => {
 
 
     function bookEventHandler(event) {
-        if(!props.context.token){
-            setOpen(prevOpen => prevOpen=false);
+        if (!props.context.token) {
+            setOpen(prevOpen => prevOpen = false);
             return;
         }
         console.log("Token: ", props.context.token);
         // e.preventDefault();
-        setOpen(prevOpen => prevOpen=false);
+        setOpen(prevOpen => prevOpen = false);
         // type Booking{
         //     _id: ID!
         //     event: Event!
@@ -36,9 +36,9 @@ const EventList = (props) => {
                     }
                 }
         `,
-        variables:{
-            id: selectEvents
-        }
+            variables: {
+                id: selectEvents
+            }
 
         };
 
@@ -74,7 +74,7 @@ const EventList = (props) => {
 
     const events = props.events.map(event => {
         console.log("Event ID: ", event._id);
-        function openModalHandler(e){
+        function openModalHandler(e) {
             e.preventDefault();
             setOpen(prevOpen => prevOpen = true);
             console.log("Open events ID: ", e.target.value);
@@ -90,16 +90,17 @@ const EventList = (props) => {
                     </Header>
                     <Grid columns={2} relaxed='very' stackable>
                         <Grid.Column>
-                            <Header as="h5" color="red" >Price $ {event.price}</Header>
+                            <Header as="h5" color="red" >Ticket Price $ {event.price}</Header>
                         </Grid.Column>
 
                         <Grid.Column verticalAlign='middle'>
                             <Header as="h5" color="teal" textAlign="right">Date {new Date(event.date).toLocaleDateString()}</Header>
+
                         </Grid.Column>
                     </Grid>
 
                     <Divider vertical>And</Divider>
-
+                    {/* VIEW DETAILS AND MODAL START  */}
 
 
                     {props.authUserId === event.creator._id ? <p><br />you are owner of this event</p> : <Modal
@@ -129,7 +130,7 @@ const EventList = (props) => {
 
                             {/* BOOK EVENT  */}
                             <Button
-                                content={props.context.token? "Book Event" : "Confirm"}
+                                content={props.context.token ? "Book Event" : "Confirm"}
                                 labelPosition='right'
                                 icon='checkmark'
                                 onClick={e => bookEventHandler(event)}
@@ -140,6 +141,7 @@ const EventList = (props) => {
 
 
 
+                    {/* VIEW DETAILS AND MODAL ENDS  */}
 
                 </Segment>
 
