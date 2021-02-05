@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, List, Loader, Dimmer } from 'semantic-ui-react';
+import { Container, Tab, Loader, Dimmer,Segment } from 'semantic-ui-react';
 import AuthContext from '../context/auth-context';
 import BookingList from '../components/BookingList';
 
@@ -170,17 +170,29 @@ class Bookings extends Component {
 
     render() {
         // console.log("State", this.state);
+
         // console.log("Token: ", this.context.token);
+
+        let content = <Dimmer active> <Loader size='massive' >Loading</Loader></Dimmer>;
+        if (!this.state.isLoading) {
+            const panes = [
+                { menuItem: 'List', render: () => <Tab.Pane><BookingList bookings={this.state.bookings} onDelete={this.deleteBookingHandler} /></Tab.Pane> },
+                { menuItem: 'Charts', render: () => <Tab.Pane>Charts</Tab.Pane> },
+            ]
+            content = (
+                <React.Fragment>
+                    <Container>
+                        <Segment color="teal">
+                            <Tab panes={panes} />
+                        </Segment>
+                    </Container>
+                </React.Fragment>
+            );
+        }
         return (
             <React.Fragment>
-                {this.state.isLoading ? <Dimmer active>
-                    <Loader size='massive' >Loading</Loader>
-                </Dimmer> : <Container >
-                        {/* <List>
-                            {this.state.bookings.map(booking => <List.Item key={booking._id}>{booking.event.title} - {new Date(booking.createdAt).toLocaleDateString()}</List.Item>)}
-                        </List> */}
-                        <BookingList bookings={this.state.bookings} onDelete={this.deleteBookingHandler} />
-                    </Container>}
+
+                {content}
 
             </React.Fragment>
         )

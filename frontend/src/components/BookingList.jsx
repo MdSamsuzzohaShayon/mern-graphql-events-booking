@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Segment, Button, Header, Grid } from 'semantic-ui-react';
+import { List, Button, Header, Grid, Divider } from 'semantic-ui-react';
 
 const BookingList = props => {
     return (
@@ -8,7 +8,6 @@ const BookingList = props => {
                 {props.bookings.map(booking => {
                     return (
                         <List.Item key={booking._id}>
-                            <Segment >
                                 <Grid columns={2}> 
                                     <Grid.Column>
                                         <Header as="h3" color="teal">
@@ -20,7 +19,7 @@ const BookingList = props => {
                                         <Button color="red" onClick={props.onDelete.bind(this, booking._id)} >Cancel</Button>
                                     </Grid.Column>
                                 </Grid>
-                            </Segment>
+                                <Divider ></Divider>
                         </List.Item>
                     );
                 })}
