@@ -29,13 +29,17 @@ const EventList = (props) => {
 
         const requestBody = {
             query: `
-                mutation {
-                    bookEvent (eventId: "${selectEvents}"){
+                mutation BookEvent($id: ID!){
+                    bookEvent (eventId: $id){
                     createdAt
                     updatedAt
                     }
                 }
         `,
+        variables:{
+            id: selectEvents
+        }
+
         };
 
 

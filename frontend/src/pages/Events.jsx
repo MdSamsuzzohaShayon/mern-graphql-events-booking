@@ -81,20 +81,26 @@ class Events extends Component {
         // REQUEST BODY WILL BE ALWAYS SAME SO WEB DON'T NEED TO CHECK LOGIN OR NOT
         const requestBody = {
             query: `
-          mutation {
-            createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
-              _id
-              title
-              description
-              date
-              price
-              creator {
-                _id
-                email
-              }
+                mutation CreateEvent($title: String!, $description: String!, $price: Float!, $date: String!){
+                    createEvent(eventInput: {title: $title, description: $description, price: $price, date: $date}) {
+                    _id
+                    title
+                    description
+                    date
+                    price
+                    creator {
+                        _id
+                        email
+                    }
+                    }
+                }
+                `,
+            variables: {
+                title,
+                description,
+                price,
+                date
             }
-          }
-        `
         };
 
 
@@ -264,11 +270,11 @@ class Events extends Component {
                             <br />
                         </Segment>
                     }
-                    {this.state.isLoading ? 
+                    {this.state.isLoading ?
                         <Dimmer active>
                             <Loader size='massive' >Loading</Loader>
                         </Dimmer>
-                    : <EventList
+                        : <EventList
                             authUserId={this.context.userId}
                             events={this.state.events}
                             context={this.context}
