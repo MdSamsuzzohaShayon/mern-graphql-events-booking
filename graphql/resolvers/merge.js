@@ -1,6 +1,22 @@
 const Event = require('../../models/Event');
 const User = require('../../models/User');
 const { dateToString } = require('../../helper/date');
+const DataLoader = require("dataloader");
+
+
+// https://github.com/graphql/dataloader
+// DataLoader is a generic utility to be used as part of your application's data fetching layer to provide a simplified and consistent API over various remote data sources such as databases or web services via batching and caching.
+// LOADING OUR EVENTS 
+const eventLoader = new DataLoader((eventIds)=>{
+    // GET LIST OF EVENTS 
+    return events(eventIds);
+});
+
+
+const userLoader = new DataLoader(userIds=>{
+    console.log(userIds);
+    return User.find({_id: {$in: userIds}});
+});
 
 
 // EXTRA FUNCTION FOR HELPING 
@@ -22,11 +38,15 @@ const events = async eventsIds => {
 // FETCHING USERS INFORMATION FROM DATABASE USING USER ID 
 const user = async userId => {
     try {
-        const user = await User.findById(userId)
+        // const user = await User.findById(userId);
+        const user = await userLoader.load(userId.toString());
+
         return {
             ...user._doc,
             _id: user.id,
-            createdEvents: events.bind(this, user._doc.createdEvents)
+            // createdEvents: events.bind(this, user._doc.createdEvents)
+            createdEvents: eventLoader.load.bind(this, user._doc.createdEvents)
+
         }
     } catch (err) {
         throw err;
@@ -41,8 +61,9 @@ const user = async userId => {
 // FETCHING SINGLE EVENTS INFORMATION FROM DATABASE USING EVENT ID 
 const singleEvent = async eventId => {
     try {
-        const event = await Event.findById(eventId);
-        return transformEvent(event)
+        // const event = await Event.findById(eventId);
+        const event = await eventLoader.load(eventId);
+        return event;
     } catch (err) {
         throw err;
     }
@@ -66,6 +87,8 @@ const transformEvent = event => {
         date: dateToString(event._doc.date),
         // REPLACE USER 
         creator: user.bind(this, event.creator)
+        // creator: userLoader.load.bind(this, event.creator)
+
     }
 }
 

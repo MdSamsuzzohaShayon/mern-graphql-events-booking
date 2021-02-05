@@ -44,7 +44,7 @@ module.exports = (req, res, next) => {
 
 
     // IF EVERYTHING WENT RIGHT AND PASS ALL CONDITIONS 
-    req.isAuth = true ;
+    req.isAuth = true;
     req.userId = decodedToken.userId;
     next();
 }
