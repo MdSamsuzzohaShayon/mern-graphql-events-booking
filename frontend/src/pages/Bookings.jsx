@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import keys from '../config/keys';
 import { Container, Tab, Loader, Dimmer,Segment } from 'semantic-ui-react';
 import AuthContext from '../context/auth-context';
 import BookingList from '../components/BookingList';
@@ -60,7 +61,7 @@ class Bookings extends Component {
         };
 
 
-        fetch("http://localhost:8000/graphql", {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {
@@ -134,7 +135,7 @@ class Bookings extends Component {
         };
 
 
-        fetch("http://localhost:8000/graphql", {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {

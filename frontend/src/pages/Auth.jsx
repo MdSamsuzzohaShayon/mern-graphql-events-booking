@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import keys from '../config/keys';
 import { Container, Form, Button } from 'semantic-ui-react';
 import AuthContext from "../context/auth-context";
 
@@ -97,7 +98,7 @@ class Auth extends Component {
 
 
 
-        fetch(`http://localhost:8000/graphql`, {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {

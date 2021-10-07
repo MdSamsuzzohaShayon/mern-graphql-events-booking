@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import keys from '../config/keys';
 import { Container, Button, Header, Segment, Form, Dimmer, Loader } from 'semantic-ui-react';
 import EventList from "../components/EventList";
 import ModalCom from "../components/ModalCom";
@@ -106,7 +107,7 @@ class Events extends Component {
 
 
         const token = this.context.token;
-        fetch("http://localhost:8000/graphql", {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {
@@ -177,7 +178,7 @@ class Events extends Component {
         };
 
 
-        fetch("http://localhost:8000/graphql", {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import keys from '../config/keys';
 import { Segment, List, Button, Header, Grid, Divider, Modal } from 'semantic-ui-react';
 
 
@@ -43,7 +44,7 @@ const EventList = (props) => {
         };
 
 
-        fetch("http://localhost:8000/graphql", {
+        fetch(keys.API_ENDPOINT, {
             method: "POST",  //GRAPHQL WORKS WITH ONLY POST REQUEST
             body: JSON.stringify(requestBody),
             headers: {
