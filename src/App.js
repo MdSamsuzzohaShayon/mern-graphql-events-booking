@@ -13,6 +13,9 @@ class App extends Component {
     token: null,
     userId: null
   }
+  componentDidMount(){
+    document.title = "MERN Stack Events App"
+  }
   login = (token, userId, tokenExpiration) => {
     this.setState({ token: token, userId: userId });
   }
